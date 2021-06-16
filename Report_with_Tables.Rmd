@@ -1,14 +1,16 @@
 ---
 title: "Tables using Children and Table Functions"
 author: "EE Holmes"
-date: "6/15/20202"
+date: "6/15/2021"
 output:
   html_document:
     toc: true
     toc_depth: 3
     toc_float: true
+    fig_caption: yes
   pdf_document: default
-  word_document: default
+  word_document: 
+    reference_docx: !expr file.path(here::here(), "template.docx")
 always_allow_html: yes
 bibliography: '`r file.path(here::here(), "text", "bibliography.bib")`'
 ---
@@ -54,6 +56,7 @@ For many of us, Word is part of our team's workflow. Word is binary so working i
 * Don't build the whole report in Word. Work on individual text sections and then have R Studio (via pandoc/knitr) assemble the report (text, figures, tables) from the individual parts.
 * How to deal with the team needing to review the assembled document (text, figures, tables):
   * Try to modularize. So maybe make individual chapters and have review happen at that level. Then you incorporate the changes into the plain text manually.
+  * Use templates to make your Word doc look the way you want. The default is kind of weird. See my example and read about using Word templates with R Markdown [here](https://bookdown.org/yihui/rmarkdown-cookbook/word-template.html).
 
 #### Making tables look nice in Word
 
@@ -62,6 +65,7 @@ The example in `Table_Counts.Rmd` and `Table_Counts_flex.Rmd` shows you tricks t
 * how to include a page break in your Word doc between tables. 
 * using `format="pandoc"` for the table
 * using `results='asis' and `print()` so you can use for loops.
+* centering your tables is next to impossible with `kable()`. Use **flextable** if you need that.
 
 <!-- This is how to get a new page in Word. Make sure you are in print view on the word doc -->
 
@@ -104,15 +108,15 @@ Phasellus non diam posuere, laoreet velit sed, egestas felis. Etiam eget neque i
 ```{r child=file.path(here::here(), "text", "Introduction.Rmd")}
 ```
 
-```{r child=file.path(here::here(), "tables", "Table1.Rmd")}
+```{r child=file.path(here::here(), "tables", "Table1_flex.Rmd")}
 ```
 
+Quisque in nibh sit amet nunc mollis porttitor quis et mauris. Sed non condimentum leo, ac condimentum est. Duis ac venenatis nulla, et aliquet elit. Suspendisse potenti. Duis mollis dui at semper luctus. Maecenas euismod finibus condimentum. Fusce vitae gravida massa. Mauris metus est, pretium non semper vel, dictum vel augue.
 
-```{r child=file.path(here::here(), "tables", "Table_Counts.Rmd")}
+```{r child=file.path(here::here(), "figures", "Figure1.Rmd")}
 ```
 
-```{=openxml}
-<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```{r child=file.path(here::here(), "tables", "Table_Counts.Rmd"), eval=FALSE}
 ```
 
 ```{r child=file.path(here::here(), "tables", "Table_Counts_flex.Rmd")}

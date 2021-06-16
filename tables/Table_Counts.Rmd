@@ -14,6 +14,10 @@ knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE)
 library(knitr)
 # need this for %>% function and nice html tables
 library(kableExtra)
+# need to know the format
+ishtml <- knitr::is_html_output()
+ispdf <- knitr::is_latex_output()
+isword <- !ishtml & !ispdf
 ```
 
 ```{r}
@@ -38,8 +42,10 @@ wordnewpage <-
 ```
 
 ```{r}
-fil <- file.path(here::here(), "data", "Lower_Columbia_River_Chinook.csv")
-counts <- read.csv(fil, stringsAsFactors=FALSE)
+fil <- "Lower_Columbia_River_Chinook.csv"
+filful <- file.path(here::here(), "data", fil)
+modtime <- system(paste("git log -1 --format=%cd", filful), intern=TRUE)
+counts <- read.csv(filful, stringsAsFactors=FALSE)
 colnames(counts) <- fixcols(colnames(counts))
 ```
 
@@ -49,19 +55,20 @@ tablecount <- function(data, cols="Spawners", caption=""){
   dt <- data[, c("Year", cols)]
   algn <- paste0("l", paste(rep("c", ncol(dt)-1), collapse=""))
   cap <- paste0(caption, "Yearly counts of ", paste(cols, collapse=" and "), " for ", min(dt$Year), " to ", max(dt$Year))
-  if(rmarkdown::all_output_formats(knitr::current_input())[1] == "word_document")
+  if(isword)
   tab <- knitr::kable(dt, align=algn, caption=cap, digits=0, 
                row.names=FALSE, format="pandoc")
-  if(rmarkdown::all_output_formats(knitr::current_input())[1] == "html_document"){
+  if(ishtml){
      tab <- dt %>% 
        kableExtra::kbl(align=algn, caption=cap, digits=0, row.names=FALSE) %>% 
-       kableExtra::kable_styling(full_width = FALSE)
+       kableExtra::kable_styling(full_width = FALSE) %>%
+       add_footnote(paste("data file date:", modtime))
   }
   tab
 }
 ```
 
-```{r results='asis', eval=!(knitr::is_html_output() | knitr::is_latex_output())}
+```{r results='asis', eval=isword}
 tbl <- 2
 col <- c("Spawners", "Fracwild")
 for(i in unique(counts$`Common Population Name`)[1:tbl]){
@@ -74,7 +81,7 @@ for(i in unique(counts$`Common Population Name`)[1:tbl]){
 }
 ```
 
-```{r results='asis', eval=knitr::is_html_output()}
+```{r results='asis', eval=ishtml}
 tbl <- 2
 col <- c("Spawners", "Fracwild")
 for(i in unique(counts$`Common Population Name`)[1:tbl]){
