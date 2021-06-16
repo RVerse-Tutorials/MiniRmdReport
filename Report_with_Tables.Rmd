@@ -1,16 +1,15 @@
 ---
 title: "Tables using Children and Table Functions"
 author: "EE Holmes"
-date: "6/15/2021"
 output:
+  word_document: 
+    reference_docx: !expr file.path(here::here(), "template.docx")
+  pdf_document: default
   html_document:
     toc: true
     toc_depth: 3
     toc_float: true
     fig_caption: yes
-  pdf_document: default
-  word_document: 
-    reference_docx: !expr file.path(here::here(), "template.docx")
 always_allow_html: yes
 bibliography: '`r file.path(here::here(), "text", "bibliography.bib")`'
 ---
