@@ -2,8 +2,10 @@
 title: "Table 1"
 author: "EE Holmes"
 output:
-  word_document: 
-    reference_docx: !expr file.path(here::here(), "template.dotx")
+  html_document:
+    df_print: paged
+  word_document:
+    reference_docx: file.path(here::here(), "template.dotx")
 ---
 
 ```{r warning=FALSE, echo=FALSE}
